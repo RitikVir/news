@@ -11,7 +11,7 @@ router.use('/admin', adminRouter);
 // router.use("/client",clientRouter);
 // router.use("/login",loginRouter);
 router.use('/poll', pollRouter);
-// router.use("/story",storyRouter);
+router.use('/story', storyRouter);
 // router.use("/writer",writerRouter);
 
 module.exports = router;
