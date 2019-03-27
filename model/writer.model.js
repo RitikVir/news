@@ -20,6 +20,10 @@ const writerSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
+  pollCount: {
+    type: Number,
+    default: 0
+  },
   isActive: {
     type: Boolean,
     default: true
