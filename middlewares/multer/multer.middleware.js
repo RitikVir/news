@@ -17,5 +17,10 @@ let upload = multer({
 });
 
 module.exports = {
-  fileUploads: upload.single('imageUrl')
+  fileUploads: upload.fields([
+    {
+      name: 'imageUrl',
+      maxCount: 1
+    }
+  ])
 };
