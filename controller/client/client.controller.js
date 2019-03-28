@@ -13,8 +13,9 @@ module.exports = {
     });
     Client.findById(req.body.authorId, (err, clientData) => {
       if (err) throw err;
+      console.log(req.files);
       if (clientData.pollRemaining <= 0) {
-        res
+        return res
           .status(200)
           .send({ status: false, _id: '', comment: 'Pls Recharge ur account' });
       }
@@ -37,6 +38,7 @@ module.exports = {
   },
   requestStory: (req, res) => {},
   addPollImage: (req, res) => {
+    console.log('add ple image function ', req.files, req.body);
     RequestPoll.findByIdAndUpdate(
       req.params.id,
       {
