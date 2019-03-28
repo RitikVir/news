@@ -4,6 +4,8 @@ const Client = require('../../model/client.model');
 const Login = require('../../model/login.model');
 const password = require('../../playground/password.playground');
 const Writer = require('../../model/writer.model');
+const RequestPoll = require('../../model/requestPoll.model');
+const RequestStory = require('../../model/requestStory.model');
 
 module.exports = {
   addClient: (req, res) => {
@@ -61,5 +63,25 @@ module.exports = {
         });
       });
     });
-  }
+  },
+  getStory: (req, res) => {
+    RequestStory.find(
+      { isPublished: false, isRejected: false },
+      (err, stories) => {
+        if (err) throw err;
+        res.status(200).send(stories);
+      }
+    );
+  },
+  getPoll: (req, res) => {
+    RequestPoll.find(
+      { isPublished: false, isRejected: false },
+      (err, polls) => {
+        if (err) throw err;
+        res.status(200).send(polls);
+      }
+    );
+  },
+  publishStory: (req, res) => {},
+  publishPoll: (req, res) => {}
 };

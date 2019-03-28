@@ -22,9 +22,16 @@ const requestPollSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isRejected: {
+    type: Boolean,
+    default: false
+  },
   isActive: {
     type: Boolean,
     default: false
+  },
+  comment: {
+    type: String
   }
 });
 module.exports = mongoose.model('requestPoll', requestPollSchema);

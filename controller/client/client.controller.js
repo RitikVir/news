@@ -36,9 +36,34 @@ module.exports = {
       });
     });
   },
-  requestStory: (req, res) => {},
+  requestStory: (req, res) => {
+    let RequestInfo = new RequestStory();
+    RequestInfo.heading = req.body.heading;
+    RequestInfo.detail = req.body.detail;
+    RequestInfo.imageUrl = req.files.imageUrl[0].filename;
+    RequestInfo.storyUrl = req.body.storyUrl;
+    RequestInfo.authorId = req.body.authorId;
+    Client.findById(req.body.authorId, (err, data) => {
+      if (err) throw err;
+      if (data.storyRemaining <= 0) {
+        return res.status(200).json({ status: false });
+      }
+      Client.findByIdAndUpdate(
+        req.body.authorId,
+        { $inc: { storyRemaining: -1 } },
+        (cerr, data) => {
+          if (cerr) throw cerr;
+          console.log(data);
+          RequestInfo.save((serr, response) => {
+            if (serr) throw serr;
+            console.log(response);
+            res.status(200).send({ status: true });
+          });
+        }
+      );
+    });
+  },
   addPollImage: (req, res) => {
-    console.log('add ple image function ', req.files, req.body);
     RequestPoll.findByIdAndUpdate(
       req.params.id,
       {
