@@ -90,7 +90,7 @@ module.exports = {
   makePayment: (req, res) => {
     let transactionInfo = new Payment();
     transactionInfo.userId = req.body.userId;
-    transactionInfo.units = req.body.amount / key.price;
+    transactionInfo.units = req.body.amount / process.env.price;
     transactionInfo.save((err, data) => {
       if (err) throw err;
       var params = {};

@@ -1,7 +1,7 @@
 const sgMail = require('@sendgrid/mail');
 const key = require('../../key');
 
-sgMail.setApiKey(key.email);
+sgMail.setApiKey(process.env.email);
 
 module.exports = {
   sendEmail: user => {
@@ -10,7 +10,7 @@ module.exports = {
       from: 'support@indiaknows.com',
       subject: 'Login Details',
       text: `Your Account is activated for ${
-        key.website
+        process.env.website
       } \n Login Credentials are \n PhoneNumber::${
         user.phoneNumber
       }\n Password::${user.password}\n Please do not share the details`
