@@ -1,6 +1,14 @@
 const RequestPoll = require('../../model/requestPoll.model');
 const RequestStory = require('../../model/requestStory.model');
 const Client = require('../../model/client.model');
+const Payment = require('../../model/payment.model');
+const key = require('../../key');
+var PaytmConfig = {
+  mid: 'nbTZUQ26783107880967',
+  key: 'dfI2CfMZK8%O@MAY',
+  website: 'WEBSTAGING'
+};
+const checksum_lib = require('../../playground/payment/checksum');
 
 module.exports = {
   requestPoll: (req, res) => {
@@ -78,5 +86,54 @@ module.exports = {
         res.status(200).send({ status: true });
       }
     );
+  },
+  makePayment: (req, res) => {
+    let transactionInfo = new Payment();
+    transactionInfo.userId = req.body.userId;
+    transactionInfo.units = req.body.amount / key.price;
+    transactionInfo.save((err, data) => {
+      if (err) throw err;
+      var params = {};
+      params['MID'] = PaytmConfig.mid;
+      params['WEBSITE'] = PaytmConfig.website;
+      params['CHANNEL_ID'] = 'WEB';
+      params['INDUSTRY_TYPE_ID'] = 'Retail';
+      params['ORDER_ID'] = data._id;
+      params['CUST_ID'] = req.body.userId;
+      params['TXN_AMOUNT'] = req.body.amount;
+      params['CALLBACK_URL'] = 'http://localhost:4200/api/client/paymentstatus';
+
+      checksum_lib.genchecksum(params, PaytmConfig.key, function(
+        err,
+        checksum
+      ) {
+        console.log(err, checksum);
+        var txn_url =
+          'https://securegw-stage.paytm.in/theia/processTransaction';
+        var form_fields = '';
+        for (var x in params) {
+          form_fields +=
+            "<input type='hidden' name='" + x + "' value='" + params[x] + "'> ";
+        }
+        form_fields +=
+          "<input type='hidden' name='CHECKSUMHASH' value='" + checksum + "' >";
+
+        // res.writeHead(200, { 'Content-Type': 'text/html' });
+        let formString =
+          '<html><head><title>Merchant Checkout Page</title></head><body><center><h1>Please do not refresh this page...</h1></center><form method="post" action="' +
+          txn_url +
+          '" name="f1">' +
+          form_fields +
+          '</form><script type="text/javascript">document.f1.submit();</script></body></html>';
+        // res.write(
+
+        // );
+        // res.end();
+        res.json({ formString });
+      });
+    });
+  },
+  paymentStatus: (req, res) => {
+    console.log(req.params, req.body);
   }
 };
