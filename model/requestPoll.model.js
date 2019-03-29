@@ -32,6 +32,13 @@ const requestPollSchema = mongoose.Schema({
   },
   comment: {
     type: String
-  }
+  },
+  options: [
+    {
+      optionValue: {
+        type: String
+      }
+    }
+  ]
 });
 module.exports = mongoose.model('requestPoll', requestPollSchema);
