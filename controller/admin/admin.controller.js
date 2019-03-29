@@ -73,6 +73,9 @@ module.exports = {
       }
     );
   },
+  working: (req, res) => {
+    res.status(200).send('Workingggggggggggg');
+  },
   getPoll: (req, res) => {
     RequestPoll.find(
       { isPublished: false, isRejected: false },

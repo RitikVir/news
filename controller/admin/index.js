@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const adminController = require('./admin.controller');
 
+app.get('/hello', adminController.working);
 app.post('/addclient', adminController.addClient);
 
 app.post('/addwriter', adminController.addWriter);
