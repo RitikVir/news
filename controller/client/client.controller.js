@@ -2,7 +2,7 @@ const RequestPoll = require('../../model/requestPoll.model');
 const RequestStory = require('../../model/requestStory.model');
 const Client = require('../../model/client.model');
 const Payment = require('../../model/payment.model');
-const key = require('../../key');
+// const key = require('../../key');
 var PaytmConfig = {
   mid: 'nbTZUQ26783107880967',
   key: 'dfI2CfMZK8%O@MAY',
