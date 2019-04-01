@@ -77,6 +77,7 @@ module.exports = {
     res.status(200).send('Workingggggggggggg');
   },
   getPoll: (req, res) => {
+    console.log('Request for publish poll came');
     RequestPoll.find(
       { isPublished: false, isRejected: false },
       (err, polls) => {
