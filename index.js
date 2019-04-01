@@ -12,6 +12,9 @@ const key = require('./config/key');
 const cors = require('cors');
 const username = key.username;
 const password = key.password;
+var path = require('path');
+
+app.use('/', express.static(path.join(__dirname, 'newspaper')));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,6 +32,9 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(router);
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, 'newspaper', 'index.html'));
+});
 console.log('mongo username', key.username);
 console.log(' mongo pass', key.password);
 
