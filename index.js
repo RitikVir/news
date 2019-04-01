@@ -8,17 +8,17 @@ const mongoose = require('mongoose');
 const mongoOptions = { useNewUrlParser: true };
 const router = require('./route/router');
 const bodyParser = require('body-parser');
-// const key = require('./key');
+const key = require('./config/key');
 const cors = require('cors');
-const username = process.env.username;
-const password = process.env.password;
+const username = key.username;
+const password = key.password;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(router);
-console.log('mongo username', process.env.username);
-console.log(' mongo pass', process.env.password);
+console.log('mongo username', key.username);
+console.log(' mongo pass', key.password);
 
 mongoose.connect(
   `mongodb://${username}:${password}@ds125616.mlab.com:25616/news`,
@@ -29,6 +29,6 @@ mongoose.connect(
   }
 );
 
-app.listen(process.env.PORT, () => {
-  console.log('App working on ', process.env.PORT);
+app.listen(key.PORT, () => {
+  console.log('App working on ', key.PORT);
 });

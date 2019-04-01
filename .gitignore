@@ -1,4 +1,4 @@
-/key.js
+config/dev.js
 node_modules/
 assets/
 /passwords

@@ -2,7 +2,7 @@ const RequestPoll = require('../../model/requestPoll.model');
 const RequestStory = require('../../model/requestStory.model');
 const Client = require('../../model/client.model');
 const Payment = require('../../model/payment.model');
-// const key = require('../../key');
+const key = require('../../config/key');
 var PaytmConfig = {
   mid: 'nbTZUQ26783107880967',
   key: 'dfI2CfMZK8%O@MAY',
@@ -90,7 +90,7 @@ module.exports = {
   makePayment: (req, res) => {
     let transactionInfo = new Payment();
     transactionInfo.userId = req.body.userId;
-    transactionInfo.units = req.body.amount / process.env.price;
+    transactionInfo.units = req.body.amount / key.price;
     transactionInfo.save((err, data) => {
       if (err) throw err;
       var params = {};
