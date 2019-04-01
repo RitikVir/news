@@ -101,7 +101,8 @@ module.exports = {
       params['ORDER_ID'] = data._id;
       params['CUST_ID'] = req.body.userId;
       params['TXN_AMOUNT'] = req.body.amount;
-      params['CALLBACK_URL'] = 'http://localhost:4200/api/client/paymentstatus';
+      params['CALLBACK_URL'] =
+        'https://newsnode.herokuapp.com/api/client/makepayment';
 
       checksum_lib.genchecksum(params, PaytmConfig.key, function(
         err,
@@ -134,6 +135,7 @@ module.exports = {
     });
   },
   paymentStatus: (req, res) => {
+    console.log('requet for make pay   ........#####$$$$');
     console.log(req.params, req.body);
   }
 };
