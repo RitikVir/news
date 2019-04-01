@@ -24,8 +24,10 @@ mongoose.connect(
   `mongodb://${username}:${password}@ds125616.mlab.com:25616/news`,
   mongoOptions,
   err => {
-    if (err) throw err;
-    else console.log('connected to mongodb...');
+    if (err) {
+      console.log(err);
+      throw err;
+    } else console.log('connected to mongodb...');
   }
 );
 
