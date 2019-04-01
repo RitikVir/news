@@ -126,7 +126,7 @@ module.exports = {
           txn_url +
           '" name="f1">' +
           form_fields +
-          '</form><script type="text/javascript">document.f1.submit();</script></body></html>';
+          '</form><script type="text/javascript">document.f1.submit();alert("Going Out!");</script></body></html>';
         res.write(JSON.stringify({ formString: formString }));
         res.end();
       });
