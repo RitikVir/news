@@ -18,7 +18,7 @@ app.post(
   clientController.addPollImage
 );
 
-app.post('/paymentstatus', clientController.paymentStatus);
-app.post('/makepayment', clientController.makePayment);
+app.post('/startpayment', clientController.startPayment);
+app.post('/completePayment', clientController.completePayment);
 
 module.exports = app;

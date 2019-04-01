@@ -87,7 +87,8 @@ module.exports = {
       }
     );
   },
-  makePayment: (req, res) => {
+  startPayment: (req, res) => {
+    console.log(' start payment');
     let transactionInfo = new Payment();
     transactionInfo.userId = req.body.userId;
     transactionInfo.units = req.body.amount / key.price;
@@ -132,8 +133,8 @@ module.exports = {
       });
     });
   },
-  paymentStatus: (req, res) => {
-    console.log('requet for make pay   ........#####$$$$');
+  completePayment: (req, res) => {
+    console.log('requet for complete pay   ........#####$$$$');
     console.log(req.params, req.body);
   }
 };
