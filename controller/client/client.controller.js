@@ -127,8 +127,9 @@ module.exports = {
           '" name="f1">' +
           form_fields +
           '</form><script type="text/javascript">document.f1.submit();</script></body></html>';
-        res.write({ formString: formString });
-        res.end();
+        // res.write({ formString: formString });
+        // res.end();
+        res.send({ formString: formString });
       });
     });
   },
