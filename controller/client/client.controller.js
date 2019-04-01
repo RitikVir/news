@@ -122,7 +122,7 @@ module.exports = {
 
         res.writeHead(200, { 'Content-Type': 'text/html' });
         let formString =
-          '<html><head><title>Merchant Checkout Page</title></head><body><center><h1>Please do not refresh this page...</h1></center><form method="post" action="' +
+          '<html><head><title>Merchant Checkout Page</title></head><body><center><h1>Please do not refresh this page...</h1></center><form method="post" id="f1" action="' +
           txn_url +
           '" name="f1">' +
           form_fields +
