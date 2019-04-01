@@ -110,8 +110,8 @@ module.exports = {
         checksum
       ) {
         console.log(err, checksum);
-        var txn_url = 'https://newsnode.herokuapp.com/api/admin/hello';
-        // 'https://securegw-stage.paytm.in/theia/processTransaction';
+        var txn_url =
+          'https://securegw-stage.paytm.in/theia/processTransaction';
         var form_fields = '';
         for (var x in params) {
           form_fields +=
