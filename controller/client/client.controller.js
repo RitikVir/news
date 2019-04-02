@@ -138,22 +138,28 @@ module.exports = {
   completePayment: (req, res) => {
     console.log('requet for complete pay   ........#####$$$$', req.body);
     var body = '';
+
     req.on('data', function(data) {
       body += data;
-      console.log('came here', body);
+      console.log('came here ', body);
     });
+
     req.on('end', function() {
-      console.log('came at cp 1');
+      console.log('came to cp1');
       var html = '';
       var post_data = qs.parse(body);
+
+      // received params in callback
       console.log('Callback Response: ', post_data, '\n');
       html += '<b>Callback Response</b><br>';
       for (var x in post_data) {
         html += x + ' => ' + post_data[x] + '<br/>';
       }
       html += '<br/><br/>';
+
+      // verify the checksum
       var checksumhash = post_data.CHECKSUMHASH;
-      console.log('came at cp 2');
+      // delete post_data.CHECKSUMHASH;
       var result = checksum_lib.verifychecksum(
         post_data,
         PaytmConfig.key,
@@ -163,8 +169,9 @@ module.exports = {
       html += '<b>Checksum Result</b> => ' + (result ? 'True' : 'False');
       html += '<br/><br/>';
 
+      // Send Server-to-Server request to verify Order Status
       var params = { MID: PaytmConfig.mid, ORDERID: post_data.ORDERID };
-      console.log('came at cp 3', params);
+
       checksum_lib.genchecksum(params, PaytmConfig.key, function(
         err,
         checksum
@@ -186,10 +193,9 @@ module.exports = {
 
         // Set up the request
         var response = '';
-        var post_req = http.request(options, function(post_res) {
+        var post_req = https.request(options, function(post_res) {
           post_res.on('data', function(chunk) {
             response += chunk;
-            console.log('Got response.......', response);
           });
 
           post_res.on('end', function() {
@@ -206,11 +212,87 @@ module.exports = {
             res.end();
           });
         });
-        console.log('came at cp end');
+
         // post the data
         post_req.write(post_data);
         post_req.end();
       });
     });
+
+    // var body = '';
+    // req.on('data', function(data) {
+    //   body += data;
+    //   console.log('came here', body);
+    // });
+    // req.on('end', function() {
+    //   console.log('came at cp 1');
+    //   var html = '';
+    //   var post_data = qs.parse(body);
+    //   console.log('Callback Response: ', post_data, '\n');
+    //   html += '<b>Callback Response</b><br>';
+    //   for (var x in post_data) {
+    //     html += x + ' => ' + post_data[x] + '<br/>';
+    //   }
+    //   html += '<br/><br/>';
+    //   var checksumhash = post_data.CHECKSUMHASH;
+    //   console.log('came at cp 2');
+    //   var result = checksum_lib.verifychecksum(
+    //     post_data,
+    //     PaytmConfig.key,
+    //     checksumhash
+    //   );
+    //   console.log('Checksum Result => ', result, '\n');
+    //   html += '<b>Checksum Result</b> => ' + (result ? 'True' : 'False');
+    //   html += '<br/><br/>';
+
+    //   var params = { MID: PaytmConfig.mid, ORDERID: post_data.ORDERID };
+    //   console.log('came at cp 3', params);
+    //   checksum_lib.genchecksum(params, PaytmConfig.key, function(
+    //     err,
+    //     checksum
+    //   ) {
+    //     params.CHECKSUMHASH = checksum;
+    //     post_data = 'JsonData=' + JSON.stringify(params);
+
+    //     var options = {
+    //       hostname: 'securegw-stage.paytm.in', // for staging
+    //       // hostname: 'securegw.paytm.in', // for production
+    //       port: 443,
+    //       path: '/merchant-status/getTxnStatus',
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/x-www-form-urlencoded',
+    //         'Content-Length': post_data.length
+    //       }
+    //     };
+
+    //     // Set up the request
+    //     var response = '';
+    //     var post_req = http.request(options, function(post_res) {
+    //       post_res.on('data', function(chunk) {
+    //         response += chunk;
+    //         console.log('Got response.......', response);
+    //       });
+
+    //       post_res.on('end', function() {
+    //         console.log('S2S Response: ', response, '\n');
+
+    //         var _result = JSON.parse(response);
+    //         html += '<b>Status Check Response</b><br>';
+    //         for (var x in _result) {
+    //           html += x + ' => ' + _result[x] + '<br/>';
+    //         }
+
+    //         res.writeHead(200, { 'Content-Type': 'text/html' });
+    //         res.write(html);
+    //         res.end();
+    //       });
+    //     });
+    //     console.log('came at cp end');
+    //     // post the data
+    //     post_req.write(post_data);
+    //     post_req.end();
+    //   });
+    // });
   }
 };
