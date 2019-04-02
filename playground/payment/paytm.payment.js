@@ -5,7 +5,7 @@ var crypt = {
   iv: '@@@@&&&&####$$$$',
 
   encrypt: function(data, customKey) {
-    var iv = new Buffer(this.iv);
+    var iv = Buffer.from(this.iv);
 
     var key = customKey;
     var algo = '256';
