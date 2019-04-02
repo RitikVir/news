@@ -4,7 +4,7 @@ const Client = require('../../model/client.model');
 const Payment = require('../../model/payment.model');
 const qs = require('querystring');
 const key = require('../../config/key');
-const https = require('https');
+const http = require('http');
 
 var PaytmConfig = {
   mid: 'nbTZUQ26783107880967',
@@ -106,7 +106,7 @@ module.exports = {
       params['CUST_ID'] = req.body.userId;
       params['TXN_AMOUNT'] = req.body.amount;
       params['CALLBACK_URL'] =
-        'https://newsnode.herokuapp.com/api/client/completepayment';
+        'http://newsnode.herokuapp.com/api/client/completepayment';
 
       checksum_lib.genchecksum(params, PaytmConfig.key, function(
         err,
@@ -183,7 +183,7 @@ module.exports = {
 
         // Set up the request
         var response = '';
-        var post_req = https.request(options, function(post_res) {
+        var post_req = http.request(options, function(post_res) {
           post_res.on('data', function(chunk) {
             response += chunk;
           });
