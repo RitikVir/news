@@ -141,6 +141,7 @@ module.exports = {
     req.on('data', function(data) {
       body += data;
     });
+    console.log('came here', body);
     req.on('end', function() {
       console.log('came at cp 1');
       var html = '';
