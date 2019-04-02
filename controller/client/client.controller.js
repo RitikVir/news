@@ -142,6 +142,7 @@ module.exports = {
       body += data;
     });
     req.on('end', function() {
+      console.log('came at cp 1');
       var html = '';
       var post_data = qs.parse(body);
       console.log('Callback Response: ', post_data, '\n');
@@ -151,6 +152,7 @@ module.exports = {
       }
       html += '<br/><br/>';
       var checksumhash = post_data.CHECKSUMHASH;
+      console.log('came at cp 2');
       var result = checksum_lib.verifychecksum(
         post_data,
         PaytmConfig.key,
@@ -161,7 +163,7 @@ module.exports = {
       html += '<br/><br/>';
 
       var params = { MID: PaytmConfig.mid, ORDERID: post_data.ORDERID };
-
+      console.log('came at cp 3', params);
       checksum_lib.genchecksum(params, PaytmConfig.key, function(
         err,
         checksum
@@ -203,7 +205,7 @@ module.exports = {
             res.end();
           });
         });
-
+        console.log('came at cp end');
         // post the data
         post_req.write(post_data);
         post_req.end();
