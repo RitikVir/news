@@ -143,7 +143,8 @@ module.exports = {
 
     console.log('came at cp 1  ');
     var html = '';
-    var post_data = qs.parse(body);
+    var post_data = body;
+    // var post_data = qs.parse(body);
     console.log('   body  ', body);
     console.log(' post_ data ', post_data);
     console.log('Callback Response: ', post_data, '\n');
