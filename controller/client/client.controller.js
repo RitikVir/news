@@ -2,7 +2,10 @@ const RequestPoll = require('../../model/requestPoll.model');
 const RequestStory = require('../../model/requestStory.model');
 const Client = require('../../model/client.model');
 const Payment = require('../../model/payment.model');
+const qs = require('querystring');
 const key = require('../../config/key');
+const https = require('https');
+
 var PaytmConfig = {
   mid: 'nbTZUQ26783107880967',
   key: 'dfI2CfMZK8%O@MAY',
@@ -134,6 +137,76 @@ module.exports = {
   },
   completePayment: (req, res) => {
     console.log('requet for complete pay   ........#####$$$$');
-    console.log(req.params, req.body);
+    var body = '';
+    req.on('data', function(data) {
+      body += data;
+    });
+    req.on('end', function() {
+      var html = '';
+      var post_data = qs.parse(body);
+      console.log('Callback Response: ', post_data, '\n');
+      html += '<b>Callback Response</b><br>';
+      for (var x in post_data) {
+        html += x + ' => ' + post_data[x] + '<br/>';
+      }
+      html += '<br/><br/>';
+      var checksumhash = post_data.CHECKSUMHASH;
+      var result = checksum_lib.verifychecksum(
+        post_data,
+        PaytmConfig.key,
+        checksumhash
+      );
+      console.log('Checksum Result => ', result, '\n');
+      html += '<b>Checksum Result</b> => ' + (result ? 'True' : 'False');
+      html += '<br/><br/>';
+
+      var params = { MID: PaytmConfig.mid, ORDERID: post_data.ORDERID };
+
+      checksum_lib.genchecksum(params, PaytmConfig.key, function(
+        err,
+        checksum
+      ) {
+        params.CHECKSUMHASH = checksum;
+        post_data = 'JsonData=' + JSON.stringify(params);
+
+        var options = {
+          hostname: 'securegw-stage.paytm.in', // for staging
+          // hostname: 'securegw.paytm.in', // for production
+          port: 443,
+          path: '/merchant-status/getTxnStatus',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': post_data.length
+          }
+        };
+
+        // Set up the request
+        var response = '';
+        var post_req = https.request(options, function(post_res) {
+          post_res.on('data', function(chunk) {
+            response += chunk;
+          });
+
+          post_res.on('end', function() {
+            console.log('S2S Response: ', response, '\n');
+
+            var _result = JSON.parse(response);
+            html += '<b>Status Check Response</b><br>';
+            for (var x in _result) {
+              html += x + ' => ' + _result[x] + '<br/>';
+            }
+
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(html);
+            res.end();
+          });
+        });
+
+        // post the data
+        post_req.write(post_data);
+        post_req.end();
+      });
+    });
   }
 };
