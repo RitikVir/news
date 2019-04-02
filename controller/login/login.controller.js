@@ -57,5 +57,25 @@ module.exports = {
         }
       );
     }
+  },
+
+  checkAlreadyRegistered: (req, res) => {
+    User.findOne({ email: req.params.email }, (err, userInfo) => {
+      if (err) throw err;
+      if (userInfo) {
+        let token = jwt.sign(
+          {
+            role: 'user',
+            userId: userInfo.userId,
+            isVerifiedOtp: userInfo.isVerifiedOtp
+          },
+          'secretkey',
+          {
+            expiresIn: 1200
+          }
+        );
+        res.json({ token: token });
+      } else res.json({ token: null });
+    });
   }
 };
