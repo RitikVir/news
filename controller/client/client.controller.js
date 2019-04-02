@@ -174,8 +174,8 @@ module.exports = {
         path: '/merchant-status/getTxnStatus',
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': post_data.length
+          'Content-Type': 'application/x-www-form-urlencoded'
+          // 'Content-Length': post_data.length
         }
       };
 
