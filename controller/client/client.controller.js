@@ -186,6 +186,7 @@ module.exports = {
         var post_req = http.request(options, function(post_res) {
           post_res.on('data', function(chunk) {
             response += chunk;
+            console.log('Got response.......', response);
           });
 
           post_res.on('end', function() {
