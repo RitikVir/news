@@ -4,7 +4,7 @@ const Client = require('../../model/client.model');
 const Payment = require('../../model/payment.model');
 const qs = require('querystring');
 const key = require('../../config/key');
-const http = require('http');
+const https = require('https');
 
 var PaytmConfig = {
   mid: 'nbTZUQ26783107880967',
@@ -181,7 +181,7 @@ module.exports = {
 
       // Set up the request
       var response = '';
-      var post_req = http.request(options, function(post_res) {
+      var post_req = https.request(options, function(post_res) {
         post_res.on('data', function(chunk) {
           response += chunk;
           console.log('Got response.......', response);
