@@ -36,5 +36,32 @@ module.exports = {
         });
       });
     });
+  },
+
+  socialSignUp: (req, res) => {
+    let newUser = new User();
+    newUser.name = req.body.name;
+    newUser.email = req.body.email;
+    newUser.phoneNumber = req.body.phoneNumber;
+    try {
+      newUser.save(err => {
+        if (err) throw err;
+        let token = jwt.sign(
+          {
+            role: 'user',
+            userId: userInfo.userId,
+            isVerifiedOtp: userInfo.isVerifiedOtp
+          },
+          'secretkey',
+          {
+            expiresIn: 1200
+          }
+        );
+        res.json({ token: token });
+      });
+    } catch (e) {
+      console.log(e);
+      res.json({ token: null });
+    }
   }
 };
