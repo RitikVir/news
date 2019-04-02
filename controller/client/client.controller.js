@@ -136,7 +136,7 @@ module.exports = {
     });
   },
   completePayment: (req, res) => {
-    console.log('requet for complete pay   ........#####$$$$');
+    console.log('requet for complete pay   ........#####$$$$', req.body);
     var body = '';
     req.on('data', function(data) {
       body += data;
