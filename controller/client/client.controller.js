@@ -207,7 +207,7 @@ module.exports = {
           ) {
             local_res = 'success';
           }
-          Payment.findOneAndUpdate(
+          Payment.findByIdAndUpdate(
             _result.ORDERID,
             {
               $set: {
