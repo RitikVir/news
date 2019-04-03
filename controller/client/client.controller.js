@@ -236,14 +236,14 @@ module.exports = {
           const url =
             'https://newsnode.herokuapp.com/client/paymentstatus/' + local_res;
           console.log(url);
-          // res.redirect(url);
+
           fs.appendFile('logs/transaction.txt', html, err => {
             if (err) throw err;
           });
-
-          res.writeHead(200, { 'Content-Type': 'text/html' });
-          res.write(html);
-          res.end();
+          res.redirect(url);
+          // res.writeHead(200, { 'Content-Type': 'text/html' });
+          // res.write(html);
+          // res.end();
         });
       });
       console.log('came at cp end');
