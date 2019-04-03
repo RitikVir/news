@@ -222,8 +222,8 @@ module.exports = {
                 client.userId,
                 {
                   $inc: {
-                    storyRemaining: 10 * (_result[TXNAMOUNT] / key.price),
-                    pollRemaining: 5 * (_result[TXNAMOUNT] / key.price)
+                    storyRemaining: 10 * (_result.TXNAMOUNT / key.price),
+                    pollRemaining: 5 * (_result.TXNAMOUNT / key.price)
                   }
                 },
                 (nerr, updatedClient) => {
