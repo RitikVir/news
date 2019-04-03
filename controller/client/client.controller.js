@@ -199,6 +199,48 @@ module.exports = {
             html += x + ' => ' + _result[x] + '<br/>';
           }
 
+          var local_res = 'failure';
+          if (
+            _result[RESPCODE] == '01' &&
+            _result[ORDERID] == post_data[ORDERID] &&
+            _result[TXNAMOUNT] == post_data[TXNAMOUNT]
+          ) {
+            local_res = 'success';
+          }
+          Payment.findOneAndUpdate(
+            _result.ORDERID,
+            {
+              $set: {
+                transactionId: _result.TXNID,
+                isSuccessful: local_res
+              }
+            },
+            (err, client) => {
+              if (err) throw err;
+              console.log(' Mongo response 1');
+              Client.findByIdAndUpdate(
+                client.userId,
+                {
+                  $inc: {
+                    storyRemaining: 10 * (_result[TXNAMOUNT] / key.price),
+                    pollRemaining: 5 * (_result[TXNAMOUNT] / key.price)
+                  }
+                },
+                (nerr, updatedClient) => {
+                  if (nerr) throw nerr;
+                  console.log(' Client Updated', updatedClient);
+                }
+              );
+            }
+          );
+          const url =
+            'https://newsnode.herokuapp.com/client/paymentstatus/' + local_res;
+          console.log(url);
+          // res.redirect(url);
+          fs.appendFile('logs/transaction.txt', html, err => {
+            if (err) throw err;
+          });
+
           res.writeHead(200, { 'Content-Type': 'text/html' });
           res.write(html);
           res.end();
