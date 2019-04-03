@@ -168,7 +168,7 @@ module.exports = {
     console.log('came at cp 3', params);
     checksum_lib.genchecksum(params, PaytmConfig.key, function(err, checksum) {
       params.CHECKSUMHASH = checksum;
-      post_data = 'JsonData=' + JSON.stringify(params);
+      var new_post_data = 'JsonData=' + JSON.stringify(params);
 
       var options = {
         hostname: 'securegw-stage.paytm.in', // for staging
@@ -177,8 +177,8 @@ module.exports = {
         path: '/merchant-status/getTxnStatus',
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-          // 'Content-Length': post_data.length
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': new_post_data.length
         }
       };
 
@@ -201,9 +201,9 @@ module.exports = {
 
           var local_res = 'failure';
           if (
-            _result[RESPCODE] == '01' &&
-            _result[ORDERID] == post_data[ORDERID] &&
-            _result[TXNAMOUNT] == post_data[TXNAMOUNT]
+            _result.RESPCODE == '01' &&
+            _result.ORDERID == post_data.ORDERID &&
+            _result.TXNAMOUNT == post_data.TXNAMOUNT
           ) {
             local_res = 'success';
           }
@@ -248,7 +248,7 @@ module.exports = {
       });
       console.log('came at cp end');
       // post the data
-      post_req.write(post_data);
+      post_req.write(new_post_data);
       post_req.end();
     });
   }
