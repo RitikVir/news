@@ -144,6 +144,7 @@ module.exports = {
     console.log('came at cp 1  ');
     var html = '';
     var post_data = body;
+    // var post_data = qs.parse(body);
     console.log('   body  ', body);
     console.log(' post_ data ', post_data);
     console.log('Callback Response: ', post_data, '\n');
@@ -166,7 +167,6 @@ module.exports = {
     var params = { MID: PaytmConfig.mid, ORDERID: post_data.ORDERID };
     console.log('came at cp 3', params);
     checksum_lib.genchecksum(params, PaytmConfig.key, function(err, checksum) {
-      if (err) throw err;
       params.CHECKSUMHASH = checksum;
       post_data = 'JsonData=' + JSON.stringify(params);
 
@@ -185,61 +185,27 @@ module.exports = {
       // Set up the request
       var response = '';
       var post_req = https.request(options, function(post_res) {
-        response = post_res;
-        console.log('Got response.......', response);
-
-        console.log('S2S Response: ', response, '\n');
-
-        var _result = JSON.parse(response);
-        html += '<b>Status Check Response</b><br>';
-        for (var x in _result) {
-          html += x + ' => ' + _result[x] + '<br/>';
-        }
-        var local_res = 'failure';
-        if (
-          _result[RESPCODE] == '01' &&
-          _result[ORDERID] == post_data[ORDERID] &&
-          _result[TXNAMOUNT] == post_data[TXNAMOUNT]
-        ) {
-          local_res = 'success';
-        }
-        Payment.findOneAndUpdate(
-          _result.ORDERID,
-          {
-            $set: {
-              transactionId: _result.TXNID,
-              isSuccessful: local_res
-            }
-          },
-          (err, client) => {
-            if (err) throw err;
-            console.log(' Mongo response 1');
-            Client.findByIdAndUpdate(
-              client.userId,
-              {
-                $inc: {
-                  storyRemaining: 10 * (_result[TXNAMOUNT] / key.price),
-                  pollRemaining: 5 * (_result[TXNAMOUNT] / key.price)
-                }
-              },
-              (nerr, updatedClient) => {
-                if (nerr) throw nerr;
-                console.log(' Client Updated', updatedClient);
-              }
-            );
-          }
-        );
-        const url =
-          'https://newsnode.herokuapp.com/client/paymentstatus/' + local_res;
-        console.log(url);
-        res.redirect(url);
-        fs.appendFile('logs/transaction.txt', html, err => {
-          if (err) throw err;
+        post_res.on('data', function(chunk) {
+          response += chunk;
+          console.log('Got response.......', response);
         });
 
-        console.log('came at cp end');
-        // post the data
+        post_res.on('end', function() {
+          console.log('S2S Response: ', response, '\n');
+
+          var _result = JSON.parse(response);
+          html += '<b>Status Check Response</b><br>';
+          for (var x in _result) {
+            html += x + ' => ' + _result[x] + '<br/>';
+          }
+
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.write(html);
+          res.end();
+        });
       });
+      console.log('came at cp end');
+      // post the data
       post_req.write(post_data);
       post_req.end();
     });
