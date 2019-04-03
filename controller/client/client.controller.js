@@ -232,7 +232,7 @@ module.exports = {
               );
             }
           );
-          res.redirect('/client/payment/' + local_res);
+          res.redirect('http://localhost:5000/client/payment/' + local_res);
           fs.appendFile('logs/transaction.txt', html, err => {
             if (err) throw err;
           });
