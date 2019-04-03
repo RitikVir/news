@@ -9,11 +9,11 @@ const paymentSchema = mongoose.Schema({
     required: true
   },
   transactionId: {
-    type: mongoose.Schema.Types.ObjectId
+    type: Number
   },
   isSuccessful: {
-    type: Boolean,
-    default: false
+    type: String,
+    default: 'failure'
   }
 });
 module.exports = mongoose.model('payment', paymentSchema);

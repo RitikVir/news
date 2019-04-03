@@ -1,4 +1,3 @@
-const express = require('express');
 const sendgrid = require('../../playground/contact/sendgrid.contact');
 const Client = require('../../model/client.model');
 const Login = require('../../model/login.model');

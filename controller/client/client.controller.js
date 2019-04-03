@@ -2,7 +2,7 @@ const RequestPoll = require('../../model/requestPoll.model');
 const RequestStory = require('../../model/requestStory.model');
 const Client = require('../../model/client.model');
 const Payment = require('../../model/payment.model');
-const qs = require('querystring');
+const fs = require('fs');
 const key = require('../../config/key');
 const https = require('https');
 
@@ -144,7 +144,6 @@ module.exports = {
     console.log('came at cp 1  ');
     var html = '';
     var post_data = body;
-    // var post_data = qs.parse(body);
     console.log('   body  ', body);
     console.log(' post_ data ', post_data);
     console.log('Callback Response: ', post_data, '\n');
@@ -167,6 +166,7 @@ module.exports = {
     var params = { MID: PaytmConfig.mid, ORDERID: post_data.ORDERID };
     console.log('came at cp 3', params);
     checksum_lib.genchecksum(params, PaytmConfig.key, function(err, checksum) {
+      if (err) throw err;
       params.CHECKSUMHASH = checksum;
       post_data = 'JsonData=' + JSON.stringify(params);
 
@@ -198,16 +198,49 @@ module.exports = {
           for (var x in _result) {
             html += x + ' => ' + _result[x] + '<br/>';
           }
-
-          res.writeHead(200, { 'Content-Type': 'text/html' });
-          res.write(html);
-          res.end();
+          var local_res = 'failure';
+          if (
+            _result[RESPCODE] == '01' &&
+            _result[ORDERID] == post_data[ORDERID] &&
+            _result[TXNAMOUNT] == post_data[TXNAMOUNT]
+          ) {
+            local_res = 'success';
+          }
+          Payment.findOneAndUpdate(
+            _result.ORDERID,
+            {
+              $set: {
+                transactionId: _result.TXNID,
+                isSuccessful: local_res
+              }
+            },
+            (err, client) => {
+              if (err) throw err;
+              Client.findByIdAndUpdate(
+                client.userId,
+                {
+                  $inc: {
+                    storyRemaining: 10 * (_result[TXNAMOUNT] / key.price),
+                    pollRemaining: 5 * (_result[TXNAMOUNT] / key.price)
+                  }
+                },
+                (nerr, updatedClient) => {
+                  if (nerr) throw nerr;
+                  console.log(' Client Updated', updatedClient);
+                }
+              );
+            }
+          );
+          res.redirect('/client/payment/' + local_res);
+          fs.appendFile('logs/transaction.txt', html, err => {
+            if (err) throw err;
+          });
         });
+        console.log('came at cp end');
+        // post the data
+        post_req.write(post_data);
+        post_req.end();
       });
-      console.log('came at cp end');
-      // post the data
-      post_req.write(post_data);
-      post_req.end();
     });
   }
 };
