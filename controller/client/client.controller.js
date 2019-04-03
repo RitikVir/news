@@ -243,9 +243,9 @@ module.exports = {
 
         console.log('came at cp end');
         // post the data
-        post_req.write(post_data);
-        post_req.end();
       });
+      post_req.write(post_data);
+      post_req.end();
     });
   }
 };
