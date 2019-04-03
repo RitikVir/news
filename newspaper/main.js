@@ -11,7 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
 var environment = {
-    API: 'https://newsnode.herokuapp.com/api',
+    API: 'https://indiaknows.herokuapp.com/api',
     price: 2,
     clientId: '983115581931-5n2hlubh513hk1777kni0565a0jcp48p.apps.googleusercontent.com'
 };
@@ -129,6 +129,10 @@ var routes = [
         loadChildren: './writer/writer.module#WriterModule',
         canActivate: [_role_guard_service__WEBPACK_IMPORTED_MODULE_5__["RoleGuardService"]],
         data: { expectedRole: 'writer' }
+    },
+    {
+        path: '**',
+        redirectTo: '/login'
     }
 ];
 var AppRoutingModule = /** @class */ (function () {

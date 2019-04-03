@@ -106,7 +106,7 @@ module.exports = {
       params['CUST_ID'] = req.body.userId;
       params['TXN_AMOUNT'] = req.body.amount;
       params['CALLBACK_URL'] =
-        'https://newsnode.herokuapp.com/api/client/completepayment';
+        'https://indiaknows.herokuapp.com/api/client/completepayment';
 
       checksum_lib.genchecksum(params, PaytmConfig.key, function(
         err,
