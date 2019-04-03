@@ -233,6 +233,7 @@ module.exports = {
             }
           );
           const url = 'http://localhost:4200/client/paymentstatus/' + local_res;
+          console.log(url);
           res.redirect(url);
           fs.appendFile('logs/transaction.txt', html, err => {
             if (err) throw err;
