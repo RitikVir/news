@@ -232,11 +232,12 @@ module.exports = {
               );
             }
           );
+          res.redirect('/client/payment/' + local_res);
+          fs.appendFile('logs/transaction.txt', html, err => {
+            if (err) throw err;
+          });
         });
-        res.redirect('/client/payment/' + local_res);
-        fs.appendFile('logs/transaction.txt', html, err => {
-          if (err) throw err;
-        });
+
         console.log('came at cp end');
         // post the data
         post_req.write(post_data);
