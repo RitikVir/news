@@ -1,5 +1,6 @@
 const Writer = require('../../model/writer.model');
 const Poll = require('../../model/poll.model');
+const Story = require('../../model/story.model');
 
 module.exports = {
   getProfile: (req, res) => {

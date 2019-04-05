@@ -1,5 +1,6 @@
 const User = require('../../model/user.model');
 const Login = require('../../model/login.model');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('../../playground/password.playground');
 
 module.exports = {
@@ -49,8 +50,8 @@ module.exports = {
         let token = jwt.sign(
           {
             role: 'user',
-            userId: userInfo.userId,
-            isVerifiedOtp: userInfo.isVerifiedOtp
+            userId: newUser._id,
+            isVerifiedOtp: false
           },
           'secretkey',
           {
